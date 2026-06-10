@@ -1,122 +1,151 @@
-# Project 1 Planning: The Unofficial Guide
-
-> Write this document before you write any pipeline code.
-> Your spec and architecture diagram are what you'll use to direct AI tools (Claude, Copilot, etc.) to generate your implementation — the more specific they are, the more useful the generated code will be.
-> Update the Retrieval Approach and Chunking Strategy sections if you change your approach during implementation.
-> Update this file before starting any stretch features.
+# The Unofficial Guide — Project 1
 
 ---
 
 ## Domain
 
-<!-- What domain did you choose? Why is this knowledge valuable and hard to find through official channels? -->
+**Domain:** University Campus Housing and Dorm Reviews. 
+**Why it's valuable:** Honest student opinions about dorm conditions, noise levels, and amenities are scattered across Reddit and forums, making it hard for freshmen to compare options efficiently through official university websites (which only show the positives). 
 
 ---
 
-## Documents
+## Document Sources
 
-<!-- List your specific sources: URLs, subreddit names, forum threads, or file descriptions.
-     Aim for at least 10 sources that together cover different subtopics or perspectives within your domain. -->
-
-| # | Source | Description | URL or location |
-|---|--------|-------------|-----------------|
-| 1 | | | |
-| 2 | | | |
-| 3 | | | |
-| 4 | | | |
-| 5 | | | |
-| 6 | | | |
-| 7 | | | |
-| 8 | | | |
-| 9 | | | |
-| 10 | | | |
+| # | Source | Type | URL or file path |
+|---|--------|------|-----------------|
+| 1 | dorm1 | Text File | `data/dorm1.txt` |
+| 2 | dorm2 | Text File | `data/dorm2.txt` |
+| 3 | dorm3 | Text File | `data/dorm3.txt` |
+| 4 | dorm4 | Text File | `data/dorm4.txt` |
+| 5 | dorm5 | Text File | `data/dorm5.txt` |
+| 6 | dorm6 | Text File | `data/dorm6.txt` |
+| 7 | dorm7 | Text File | `data/dorm7.txt` |
+| 8 | dorm8 | Text File | `data/dorm8.txt` |
+| 9 | dorm9 | Text File | `data/dorm9.txt` |
+| 10 | dorm10 | Text File | `data/dorm10.txt` |
 
 ---
 
 ## Chunking Strategy
 
-<!-- How will you split documents into chunks?
-     State your chunk size (in tokens or characters), overlap size, and explain why those
-     numbers fit the structure of your documents.
-     A review-heavy corpus warrants different chunking than a long FAQ. -->
+<!-- Describe your chunking approach with enough specificity that someone else could reproduce it.
+     Include:
+     - Chunk size (characters or tokens) and why that size fits your documents
+     - Overlap size and why (or why not) you used overlap
+     - Any preprocessing you did before chunking (e.g., stripping HTML, removing headers)
+     - What your final chunk count was across all documents -->
 
 **Chunk size:**
 
 **Overlap:**
 
-**Reasoning:**
+**Why these choices fit your documents:**
+
+**Final chunk count:**
 
 ---
 
-## Retrieval Approach
+## Embedding Model
 
-<!-- Which embedding model are you using (e.g., all-MiniLM-L6-v2 via sentence-transformers)?
-     How many chunks will you retrieve per query (top-k)?
-     If you were deploying this for real users and cost wasn't a constraint, what tradeoffs
-     would you weigh in choosing a different embedding model — context length, multilingual
-     support, accuracy on domain-specific text, latency? -->
+<!-- Name the embedding model you used and explain your choice.
+     Then answer: if you were deploying this system for real users and cost wasn't a constraint,
+     what tradeoffs would you weigh in choosing a different model?
+     Consider: context length limits, multilingual support, accuracy on domain-specific text,
+     latency, and local vs. API-hosted. -->
 
-**Embedding model:**
-
-**Top-k:**
+**Model used:**
 
 **Production tradeoff reflection:**
 
 ---
 
-## Evaluation Plan
+## Grounded Generation
 
-<!-- List your 5 test questions with their expected correct answers.
-     Questions should be specific enough that you can judge whether the system's response
-     is right or wrong. "What are good dining halls?" is too vague.
-     "What do students say about wait times at [dining hall name] during lunch?" is testable. -->
+<!-- Explain how your system enforces grounding — how does it prevent the LLM from answering
+     beyond the retrieved documents?
+     Describe both your system prompt (what instruction you gave the model) and any structural
+     choices (e.g., how you formatted the context, whether you filtered low-relevance chunks).
+     Do not just say "I told it to use the documents" — show the actual instruction or explain
+     the mechanism. -->
 
-| # | Question | Expected answer |
-|---|----------|-----------------|
-| 1 | | |
-| 2 | | |
-| 3 | | |
-| 4 | | |
-| 5 | | |
+**System prompt grounding instruction:**
+
+**How source attribution is surfaced in the response:**
 
 ---
 
-## Anticipated Challenges
+## Evaluation Report
 
-<!-- What could go wrong? Name at least two specific risks with reasoning.
-     Consider: noisy or inconsistent documents, missing source attribution, off-topic
-     retrieval, chunks that split key information across boundaries. -->
+<!-- Run your 5 test questions from planning.md through your system and record the results.
+     Be honest — a partially accurate or inaccurate result that you explain well is more
+     valuable than a suspiciously perfect result. -->
 
-1.
+| # | Question | Expected answer | System response (summarized) | Retrieval quality | Response accuracy |
+|---|----------|-----------------|------------------------------|-------------------|-------------------|
+| 1 | | | | | |
+| 2 | | | | | |
+| 3 | | | | | |
+| 4 | | | | | |
+| 5 | | | | | |
 
-2.
-
----
-
-## Architecture
-
-<!-- Draw a diagram of your pipeline showing the five stages:
-     Document Ingestion → Chunking → Embedding + Vector Store → Retrieval → Generation
-     Label each stage with the tool or library you're using.
-     You can use ASCII art, a Mermaid diagram, or embed a sketch as an image.
-     You'll use this diagram as context when prompting AI tools to implement each stage. -->
+**Retrieval quality:** Relevant / Partially relevant / Off-target  
+**Response accuracy:** Accurate / Partially accurate / Inaccurate
 
 ---
 
-## AI Tool Plan
+## Failure Case Analysis
 
-<!-- For each part of the pipeline below, describe:
-     - Which AI tool you plan to use (Claude, Copilot, ChatGPT, etc.)
-     - What you'll give it as input (which sections of this planning.md, which requirements)
-     - What you expect it to produce
-     - How you'll verify the output matches your spec
+<!-- Identify at least one question where retrieval or generation did not work as expected.
+     Write a specific explanation of *why* it failed, tied to a part of the pipeline.
 
-     "I'll use AI to help me code" is not a plan.
-     "I'll give Claude my Chunking Strategy section and ask it to implement chunk_text()
-     with my specified chunk size and overlap" is a plan. -->
+     "The answer was wrong" is not an explanation.
 
-**Milestone 3 — Ingestion and chunking:**
+     "The relevant information was split across a chunk boundary, so retrieval returned
+     only half the context — the model didn't have enough to answer correctly" is an explanation.
 
-**Milestone 4 — Embedding and retrieval:**
+     "The embedding model treated the professor's nickname as out-of-vocabulary and returned
+     results from an unrelated review" is an explanation. -->
 
-**Milestone 5 — Generation and interface:**
+**Question that failed:**
+
+**What the system returned:**
+
+**Root cause (tied to a specific pipeline stage):**
+
+**What you would change to fix it:**
+
+---
+
+## Spec Reflection
+
+<!-- Reflect on how planning.md shaped your implementation.
+     Answer both questions with at least 2–3 sentences each. -->
+
+**One way the spec helped you during implementation:**
+
+**One way your implementation diverged from the spec, and why:**
+
+---
+
+## AI Usage
+
+<!-- Describe at least 2 specific instances where you used an AI tool during this project.
+     For each: what did you give the AI as input, what did it produce, and what did you
+     change, override, or direct differently?
+
+     "I used Claude to help me code" is not sufficient.
+     "I gave Claude my Chunking Strategy section from planning.md and asked it to implement
+     chunk_text(). It returned a function using a fixed character split. I overrode the
+     chunk size from 500 to 200 because my documents are short reviews, not long guides." -->
+
+**Instance 1**
+
+- *What I gave the AI:*
+- *What it produced:*
+- *What I changed or overrode:*
+
+**Instance 2**
+
+- *What I gave the AI:*
+- *What it produced:*
+- *What I changed or overrode:*
