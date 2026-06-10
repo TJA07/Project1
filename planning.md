@@ -3,149 +3,59 @@
 ---
 
 ## Domain
-
-**Domain:** University Campus Housing and Dorm Reviews. 
-**Why it's valuable:** Honest student opinions about dorm conditions, noise levels, and amenities are scattered across Reddit and forums, making it hard for freshmen to compare options efficiently through official university websites (which only show the positives). 
-
----
-
-## Document Sources
-
-| # | Source | Type | URL or file path |
-|---|--------|------|-----------------|
-| 1 | dorm1 | Text File | `data/dorm1.txt` |
-| 2 | dorm2 | Text File | `data/dorm2.txt` |
-| 3 | dorm3 | Text File | `data/dorm3.txt` |
-| 4 | dorm4 | Text File | `data/dorm4.txt` |
-| 5 | dorm5 | Text File | `data/dorm5.txt` |
-| 6 | dorm6 | Text File | `data/dorm6.txt` |
-| 7 | dorm7 | Text File | `data/dorm7.txt` |
-| 8 | dorm8 | Text File | `data/dorm8.txt` |
-| 9 | dorm9 | Text File | `data/dorm9.txt` |
-| 10 | dorm10 | Text File | `data/dorm10.txt` |
-
----
+Michigan State Dorm reviews. These are scattered and hard to pinpoint one problem or find one place to detail all the good and bad. Promotional websites only list the good of MSU dorms, whilst reddit will detail everything. 
+## Documents
+1. dorm1.txt (Reddit review thread)
+2. dorm2.txt (Reddit review thread)
+3. dorm3.txt (Reddit review thread)
+4. dorm4.txt (Reddit review thread)
+5. dorm5.txt (Reddit review thread)
+6. dorm6.txt (Reddit review thread)
+7. dorm7.txt (Reddit review thread)
+8. dorm8.txt (Reddit review thread)
+9. dorm9.txt (Reddit review thread)
+10. dorm10.txt (Reddit review thread)
 
 ## Chunking Strategy
+I am using a fixed-size character chunking strategy set to 250 characters with a 50 character overlap. 
 
-<!-- Describe your chunking approach with enough specificity that someone else could reproduce it.
-     Include:
-     - Chunk size (characters or tokens) and why that size fits your documents
-     - Overlap size and why (or why not) you used overlap
-     - Any preprocessing you did before chunking (e.g., stripping HTML, removing headers)
-     - What your final chunk count was across all documents -->
+Our data consists of a distinct mix of both ultra-short, single-sentence student reviews and longer, multi-paragraph forum posts. A smaller chunk size of 250 characters ensures that short, punchy reviews do not get combined and diluted with unrelated feedback from other reviews. The 50-character overlap guarantees semantic continuity so that sentences spanning across a boundary do not lose their structural context during retrieval.
 
-**Chunk size:**
+## Retrieval Approach
+The embedding model used is `all-MiniLM-L6-v2` via the `sentence-transformers` library, with chunks indexed locally in ChromaDB. The pipeline will pull the top 4 most relevant chunks per user query ($k=4$). 
 
-**Overlap:**
+If deploying to real production users without cost constraints, I would evaluate an enterprise API model that has much greater power and ability/ Production tradeoffs to weigh include its support for vastly larger context windows and can understand slang and other topics significantly better. Running `all-MiniLM-L6-v2` locally offers zero runtime API costs and quick query latency, which perfectly serves this entry project to learn about AI agents.
 
-**Why these choices fit your documents:**
+## Evaluation Plan
+1. Which dorm is noted by students as having the best AC and heating units?
+2. What are the common student complaints regarding the noise levels in Wilson Hall?
+3. Are the communal bathrooms in Brody Hall described as clean or dirty?
+4. Which specific residence hall is located closest to the campus dining hall?
+5. What are the primary structural complaints reported by students living in Wilson Hall?
 
-**Final chunk count:**
+## Anticipated Challenges
+1. Text Fragmentation: Because 250 characters is a highly aggressive and small boundary, a multi-sentence review might get chopped poorly, requiring careful tuning of the 50-character overlap.
+2. Slang: Language that is specifc to Michigan State, like spartan pride, or spartys market, will not be familiar and will struggle to get the context right. 
 
----
+## AI Tool Plan
+- **Database Engine Generation:** I plan to feed the AI my exact chunking strategy (250 character limit, 50 character overlap) and data directory configurations, requesting a script to ingest local text files directly into ChromaDB.
+- **Frontend Assembly:** I will provide the AI with my target retrieval variables and ask it to output a clean Gradio interface layout featuring designated panels for text processing outputs and tracking source metadata.
 
-## Embedding Model
-
-<!-- Name the embedding model you used and explain your choice.
-     Then answer: if you were deploying this system for real users and cost wasn't a constraint,
-     what tradeoffs would you weigh in choosing a different model?
-     Consider: context length limits, multilingual support, accuracy on domain-specific text,
-     latency, and local vs. API-hosted. -->
-
-**Model used:**
-
-**Production tradeoff reflection:**
-
----
-
-## Grounded Generation
-
-<!-- Explain how your system enforces grounding — how does it prevent the LLM from answering
-     beyond the retrieved documents?
-     Describe both your system prompt (what instruction you gave the model) and any structural
-     choices (e.g., how you formatted the context, whether you filtered low-relevance chunks).
-     Do not just say "I told it to use the documents" — show the actual instruction or explain
-     the mechanism. -->
-
-**System prompt grounding instruction:**
-
-**How source attribution is surfaced in the response:**
-
----
-
-## Evaluation Report
-
-<!-- Run your 5 test questions from planning.md through your system and record the results.
-     Be honest — a partially accurate or inaccurate result that you explain well is more
-     valuable than a suspiciously perfect result. -->
-
-| # | Question | Expected answer | System response (summarized) | Retrieval quality | Response accuracy |
-|---|----------|-----------------|------------------------------|-------------------|-------------------|
-| 1 | | | | | |
-| 2 | | | | | |
-| 3 | | | | | |
-| 4 | | | | | |
-| 5 | | | | | |
-
-**Retrieval quality:** Relevant / Partially relevant / Off-target  
-**Response accuracy:** Accurate / Partially accurate / Inaccurate
-
----
-
-## Failure Case Analysis
-
-<!-- Identify at least one question where retrieval or generation did not work as expected.
-     Write a specific explanation of *why* it failed, tied to a part of the pipeline.
-
-     "The answer was wrong" is not an explanation.
-
-     "The relevant information was split across a chunk boundary, so retrieval returned
-     only half the context — the model didn't have enough to answer correctly" is an explanation.
-
-     "The embedding model treated the professor's nickname as out-of-vocabulary and returned
-     results from an unrelated review" is an explanation. -->
-
-**Question that failed:**
-
-**What the system returned:**
-
-**Root cause (tied to a specific pipeline stage):**
-
-**What you would change to fix it:**
-
----
-
-## Spec Reflection
-
-<!-- Reflect on how planning.md shaped your implementation.
-     Answer both questions with at least 2–3 sentences each. -->
-
-**One way the spec helped you during implementation:**
-
-**One way your implementation diverged from the spec, and why:**
-
----
-
-## AI Usage
-
-<!-- Describe at least 2 specific instances where you used an AI tool during this project.
-     For each: what did you give the AI as input, what did it produce, and what did you
-     change, override, or direct differently?
-
-     "I used Claude to help me code" is not sufficient.
-     "I gave Claude my Chunking Strategy section from planning.md and asked it to implement
-     chunk_text(). It returned a function using a fixed character split. I overrode the
-     chunk size from 500 to 200 because my documents are short reviews, not long guides." -->
-
-**Instance 1**
-
-- *What I gave the AI:*
-- *What it produced:*
-- *What I changed or overrode:*
-
-**Instance 2**
-
-- *What I gave the AI:*
-- *What it produced:*
-- *What I changed or overrode:*
+## Architecture
+```text
+[Document Ingestion: Local .txt files] 
+               │
+               ▼
+[Chunking: 250 Char Limit / 50 Overlap via Python] 
+               │
+               ▼
+[Embedding & Indexing: all-MiniLM-L6-v2 -> ChromaDB] 
+               │
+               ▼
+[Retrieval: Vector Semantic Search (k=4)] 
+               │
+               ▼
+[Generation: Groq llama-3.3-70b-versatile Prompt System] 
+               │
+               ▼
+[UI Layer: Gradio Web Interface Application]
