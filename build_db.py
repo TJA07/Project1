@@ -15,8 +15,8 @@ except:
 collection = chroma_client.create_collection(name="unofficial_guide", embedding_function=embed_fn)
 
 # 2. Chunking Settings (Matching your spec exactly)
-CHUNK_SIZE = 250
-OVERLAP = 50
+CHUNK_SIZE = 500
+OVERLAP = 100
 
 def get_chunks(text):
     chunks = []

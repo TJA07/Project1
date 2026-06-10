@@ -17,9 +17,9 @@ Michigan State Dorm reviews. These are scattered and hard to pinpoint one proble
 10. dorm10.txt (Reddit review thread)
 
 ## Chunking Strategy
-I am using a fixed-size character chunking strategy set to 250 characters with a 50 character overlap. 
+I am using a fixed-size character chunking strategy set to 500 characters with a 100 character overlap. 
 
-Our data consists of a distinct mix of both ultra-short, single-sentence student reviews and longer, multi-paragraph forum posts. A smaller chunk size of 250 characters ensures that short, punchy reviews do not get combined and diluted with unrelated feedback from other reviews. The 50-character overlap guarantees semantic continuity so that sentences spanning across a boundary do not lose their structural context during retrieval.
+Our data consists of a distinct mix of both ultra-short, single-sentence student reviews and longer, multi-paragraph forum posts. A smaller chunk size of 500 characters ensures that short, punchy reviews do not get combined and diluted with unrelated feedback from other reviews. The 100-character overlap guarantees semantic continuity so that sentences spanning across a boundary do not lose their structural context during retrieval. 78 final chunks
 
 ## Retrieval Approach
 The embedding model used is `all-MiniLM-L6-v2` via the `sentence-transformers` library, with chunks indexed locally in ChromaDB. The pipeline will pull the top 4 most relevant chunks per user query ($k=4$). 
